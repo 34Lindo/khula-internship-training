@@ -11,6 +11,7 @@ def fizzbuzz(n :int)  ->list[str]:
         O(n), because each number from 1 to n is processed once.
 
     Space Complexity:
+    
         O(n), because the result list stores n values.
     
     """
