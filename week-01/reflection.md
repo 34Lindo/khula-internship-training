@@ -103,3 +103,118 @@ For a number with `d` digits:
 Debugging is not just fixing syntax errors. I learned to identify whether
 a problem comes from my code, indentation, environment, file location,
 dependencies, or tests.
+
+## Day 3 Reflection — Two Sum
+
+### What I Learned
+
+Today I learned how Python dictionaries can be used as hash tables to
+perform fast lookups. I learned that a dictionary stores key-value pairs
+and that lookup is approximately O(1).
+
+I learned the Two Sum pattern:
+
+1. Iterate through the list once.
+2. Calculate the complement using `target - number`.
+3. Check whether the complement already exists in the dictionary.
+4. If it exists, return the stored index and current index.
+5. Otherwise, store the current number and its index.
+
+### Key Concept
+
+The dictionary approach improves the typical brute-force O(n²) solution
+to O(n) time at the cost of O(n) additional space.
+
+### Important Lesson
+
+The lookup must happen before storing the current number. This prevents
+using the same array element twice.
+
+### New Python Concept
+
+I used `enumerate()` to obtain both the index and value while iterating
+through a list.
+
+### Testing
+
+I tested:
+
+- Normal Two Sum example
+- Pair in the middle
+- Duplicate values
+- Negative numbers
+- Pair at the end
+- No-solution case
+
+### Problem-Solving Lesson
+
+Instead of repeatedly searching the entire list, I learned to ask:
+
+"What information can I remember so that I don't have to search again?"
+
+This led to the hash-table solution.
+
+## Day 4 Reflection — Merge Sorted Array
+
+### What I Learned
+
+Today I learned the two-pointer technique using the Merge Sorted Array
+problem.
+
+The important idea was to work backwards from the end of the arrays.
+This allows the algorithm to use the empty space already available in
+`nums1` without overwriting values that still need to be processed.
+
+### Three Pointers
+
+I used three indexes:
+
+- `i = m - 1` — last actual element in `nums1`
+- `j = n - 1` — last element in `nums2`
+- `k = m + n - 1` — final position in `nums1`
+
+At every step I compare `nums1[i]` and `nums2[j]` and place the larger
+value at `nums1[k]`.
+
+### Important Insight
+
+Working backwards is important because `nums1` already contains empty
+positions at the end. Starting from the beginning could overwrite values
+that have not yet been processed.
+
+### Errors and Debugging
+
+I initially encountered an import error:
+
+`ImportError: cannot import name 'merge' from 'solution'`
+
+The path was correct and Python found `solution.py`, so the problem was
+inside the file rather than the directory.
+
+This reminded me to distinguish between:
+
+- `ModuleNotFoundError` — Python cannot find the module.
+- `ImportError` — Python found the module but cannot find the requested
+  function or object inside it.
+
+### Testing
+
+I tested:
+
+- Normal merge
+- Empty second array
+- Empty first array
+- Values in `nums2` smaller than `nums1`
+- Duplicate values
+- Single-element arrays
+
+### Complexity
+
+Time complexity: `O(m + n)`
+
+Space complexity: `O(1)`
+
+### Key Lesson
+
+The two-pointer technique can solve array problems efficiently by using
+indexes to avoid unnecessary additional data structures.
