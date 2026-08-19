@@ -1,220 +1,319 @@
-# Day 2 Reflection — Palindrome Number
+# Week 1 Reflection — Python Fundamentals & Problem Solving
 
-## What I Learned
+## Overview
 
-Today I learned how to work with individual digits of an integer using:
+Week 1 was my introduction to the Khula Junior Developer Internship problem-solving workflow. I learned not only to make code work, but to understand a problem, design an approach, implement it, test it, debug errors, evaluate complexity, and use Git professionally.
 
-- `% 10` to extract the last digit
-- `// 10` to remove the last digit
-- Multiplication by 10 to build a reversed number
-- Boolean comparisons to determine whether a number is a palindrome
+Problems Completed
 
-I also learned how to separate responsibilities between functions. The
-`reverse_number()` function is responsible for reversing a number, while
-`is_palindrome()` determines whether the original number is equal to its
-reverse.
+1. FizzBuzz
+2. Palindrome Number
+3. Two Sum
+4. Merge Sorted Array
+5. Climbing Stairs
 
-## Problem-Solving Approach
+Day 1 — FizzBuzz
 
-1. Check whether the number is negative.
-2. Save the original number.
-3. Reverse the number.
-4. Compare the original number with the reversed number.
-5. Return `True` if they are equal, otherwise `False`.
+What I learned
+I learned loops, `range()`, `if/elif/else`, modulo `%`, lists, `.append()`, `str()`, type annotations, testing, and Big-O.
 
-## Errors I Encountered
+```python
+def fizzbuzz(n: int) -> list[str]:
+    result = []
+    for i in range(1, n + 1):
+        if i % 15 == 0:
+            result.append("FizzBuzz")
+        elif i % 3 == 0:
+            result.append("Fizz")
+        elif i % 5 == 0:
+            result.append("Buzz")
+        else:
+            result.append(str(i))
+    return result
+```
 
-### 1. IndentationError
+Important lessons
 
-I initially placed code at the wrong indentation level.
+- `range(1, n + 1)` processes 1 through n because the stop value is exclusive.
+- List indexes start at 0; this is separate from the `range()` rule.
+- `%` gives the remainder and is useful for divisibility.
+- The combined FizzBuzz condition must come before Fizz and Buzz because conditions are evaluated from top to bottom.
+- When conditions overlap, check the more specific condition first.
+- Time complexity is `O(n)`.
+- Space complexity is `O(n)` because the returned list stores n results.
 
-### Lesson
+Testing lesson
+A test initially expected `"fizz"` while the function returned `"Fizz"`. I learned that tests compare exact values, including capitalization. The test was corrected and eventually all 7 FizzBuzz tests passed.
 
-Python uses indentation to define code blocks. I learned that indentation
-is not just formatting; it affects program behavior.
+Day 2 — Palindrome Number
 
-### 2. Return Inside the While Loop
+I learned how `% 10` extracts the last digit and `// 10` removes the last digit for positive integers.
 
-I initially placed `return reversed_number` inside the `while` loop. This
-caused the function to return after processing only the first digit.
+```python
+def reverse_number(number: int) -> int:
+    reversed_number = 0
+    while number > 0:
+        digit = number % 10
+        reversed_number = reversed_number * 10 + digit
+        number //= 10
+    return reversed_number
+```
 
-For example:
+For palindrome checking, I learned to preserve the original value before changing `number`.
 
-`123` incorrectly returned `3` instead of `321`.
+```python
+def is_palindrome(number: int) -> bool:
+    if number < 0:
+        return False
 
-### Lesson
+    original = number
+    reversed_number = 0
 
-A `return` statement immediately exits the function. It therefore needed to
-be placed after the loop so every digit could be processed.
+    while number > 0:
+        digit = number % 10
+        reversed_number = reversed_number * 10 + digit
+        number //= 10
 
-### 3. Python and PowerShell Confusion
+    return original == reversed_number
+```
 
-I accidentally entered PowerShell commands such as `cd`, `pwd`, and
-`python -m pytest` inside the Python interpreter.
+Errors and lessons
 
-### Lesson
+- `IndentationError`: Python uses indentation as syntax, not decoration.
+- `ModuleNotFoundError`: Python could not find `solution.py` from the current import context.
+- I learned to exit the Python REPL, use PowerShell to `cd` into the correct solution folder, confirm the file exists, and then start Python.
+- I learned that PowerShell commands such as `cd` and `Get-ChildItem` do not belong at the Python `>>>` prompt.
 
-I learned to distinguish between:
+Day 3 — Two Sum
 
-- `>>>` — Python interpreter
-- `PS ...>` — PowerShell terminal
+The key insight was to use a dictionary to remember values already seen.
 
-### 4. ModuleNotFoundError
+```python
+def two_sum(numbers: list[int], target: int) -> list[int]:
+    seen = {}
 
-Python initially could not find `solution.py` because I was running Python
-from the wrong directory.
+    for index, number in enumerate(numbers):
+        complement = target - number
 
-### Lesson
+        if complement in seen:
+            return [seen[complement], index]
 
-The current working directory matters when importing local Python modules.
+        seen[number] = index
 
-### 5. Pytest Environment
+    return []
+```
 
-Pytest was installed in my base environment but was not available inside
-the Khula `.venv`.
+The pattern is:
 
-### Lesson
+1. Calculate the complement.
+2. Check whether it has already been seen.
+3. If yes, return the indexes.
+4. Otherwise store the current number.
 
-Python packages are installed into specific environments. I need to make
-sure I install dependencies into the environment my project is actually
-using.
+This changes the average time from a brute-force `O(n²)` approach to `O(n)` using dictionary lookup, at the cost of `O(n)` extra space.
 
-## Testing
+Day 4 — Merge Sorted Array
 
-I tested:
+I learned the two-pointer technique and in-place modification.
 
-- `121` → `True`
-- `123` → `False`
-- `1221` → `True`
-- `10` → `False`
-- `-121` → `False`
-- `0` → `True`
-- `7` → `True`
+```python
+def merge(nums1: list[int], m: int, nums2: list[int], n: int) -> None:
+    i = m - 1
+    j = n - 1
+    k = m + n - 1
 
-## Complexity
+    while i >= 0 and j >= 0:
+        if nums1[i] > nums2[j]:
+            nums1[k] = nums1[i]
+            i -= 1
+        else:
+            nums1[k] = nums2[j]
+            j -= 1
+        k -= 1
 
-For a number with `d` digits:
+    while j >= 0:
+        nums1[k] = nums2[j]
+        j -= 1
+        k -= 1
+```
 
-- Time complexity: `O(d)`
-- Space complexity: `O(1)`
+I learned to merge from the back because `nums1` has free space at the back. This prevents overwriting values that still need to be processed.
 
-## Key Lesson
+Complexity:
 
-Debugging is not just fixing syntax errors. I learned to identify whether
-a problem comes from my code, indentation, environment, file location,
-dependencies, or tests.
+- Time: `O(m + n)`
+- Extra space: `O(1)`
 
-## Day 3 Reflection — Two Sum
+I encountered an `ImportError` where Python found `solution.py` but could not import `merge`. I learned the difference between a missing module and a missing function/name inside an existing module.
 
-### What I Learned
+Day 5 — Climbing Stairs
 
-Today I learned how Python dictionaries can be used as hash tables to
-perform fast lookups. I learned that a dictionary stores key-value pairs
-and that lookup is approximately O(1).
+I learned dynamic programming and the recurrence:
 
-I learned the Two Sum pattern:
+`ways(n) = ways(n - 1) + ways(n - 2)`
 
-1. Iterate through the list once.
-2. Calculate the complement using `target - number`.
-3. Check whether the complement already exists in the dictionary.
-4. If it exists, return the stored index and current index.
-5. Otherwise, store the current number and its index.
+The final step must come from either one stair below or two stairs below.
 
-### Key Concept
+The optimized approach stores only the previous two answers, giving:
 
-The dictionary approach improves the typical brute-force O(n²) solution
-to O(n) time at the cost of O(n) additional space.
+- Time: `O(n)`
+- Space: `O(1)`
 
-### Important Lesson
+Testing and Pytest
 
-The lookup must happen before storing the current number. This prevents
-using the same array element twice.
+I learned to run automated tests with:
 
-### New Python Concept
+```powershell
+python -m pytest test_fizzbuzz.py -v
+```
 
-I used `enumerate()` to obtain both the index and value while iterating
-through a list.
+`-v` means verbose output.
 
-### Testing
+I encountered `No module named pytest` because pytest was not installed in the Python environment being used. I installed it with `python -m pip install pytest`.
 
-I tested:
+I also learned that a package installed in Conda/base Python may not exist in a project `.venv`. The Python environment matters.
 
-- Normal Two Sum example
-- Pair in the middle
-- Duplicate values
-- Negative numbers
-- Pair at the end
-- No-solution case
+Debugging Process
 
-### Problem-Solving Lesson
+My debugging process became:
 
-Instead of repeatedly searching the entire list, I learned to ask:
+1. Read the complete traceback.
+2. Identify the error type.
+3. Find the file and line number.
+4. Check my current directory and environment.
+5. Inspect the relevant code.
+6. Make one focused fix.
+7. Run the smallest relevant test.
+8. Run the full suite.
 
-"What information can I remember so that I don't have to search again?"
+Python REPL vs PowerShell
 
-This led to the hash-table solution.
+PowerShell prompt:
+`PS C:\...>`
 
-## Day 4 Reflection — Merge Sorted Array
+Python prompt:
+`>>>`
 
-### What I Learned
+PowerShell:
 
-Today I learned the two-pointer technique using the Merge Sorted Array
-problem.
+```powershell
+cd ...
+Get-ChildItem
+pwd
+git status
+git add .
+git commit
+git push
+```
 
-The important idea was to work backwards from the end of the arrays.
-This allows the algorithm to use the empty space already available in
-`nums1` without overwriting values that still need to be processed.
+Python:
 
-### Three Pointers
+```python
+from solution import fizzbuzz
+print(fizzbuzz(15))
+```
 
-I used three indexes:
+Mixing the two caused avoidable errors, and learning this distinction was important.
 
-- `i = m - 1` — last actual element in `nums1`
-- `j = n - 1` — last element in `nums2`
-- `k = m + n - 1` — final position in `nums1`
+Indentation Lesson
 
-At every step I compare `nums1[i]` and `nums2[j]` and place the larger
-value at `nums1[k]`.
+Python uses indentation to define blocks:
 
-### Important Insight
+```python
+def example():
+    value = 10
+    return value
+```
 
-Working backwards is important because `nums1` already contains empty
-positions at the end. Starting from the beginning could overwrite values
-that have not yet been processed.
+A missing or inconsistent indent can prevent an entire file from being imported or prevent pytest from collecting tests. I learned to treat indentation as part of Python syntax.
 
-### Errors and Debugging
+PEP 8 and Code Quality
 
-I initially encountered an import error:
+I learned that PEP 8 is Python's style guide. Important practices include:
 
-`ImportError: cannot import name 'merge' from 'solution'`
+- 4-space indentation
+- `snake_case`
+- spaces around operators
+- clear names
+- readable formatting
+- useful docstrings
 
-The path was correct and Python found `solution.py`, so the problem was
-inside the file rather than the directory.
+Professional code should not only work; it should be readable, testable, and maintainable.
 
-This reminded me to distinguish between:
+Git Lessons
 
-- `ModuleNotFoundError` — Python cannot find the module.
-- `ImportError` — Python found the module but cannot find the requested
-  function or object inside it.
+I used my personal branch and learned:
 
-### Testing
+```powershell
+git status
+git add .
+git commit -m "message"
+git push
+```
 
-I tested:
+I created `.gitignore` rules:
 
-- Normal merge
-- Empty second array
-- Empty first array
-- Values in `nums2` smaller than `nums1`
-- Duplicate values
-- Single-element arrays
+```text
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+```
 
-### Complexity
+I learned that `.gitignore` prevents future files from being staged but does not automatically remove files already tracked.
 
-Time complexity: `O(m + n)`
+What Went Well
 
-Space complexity: `O(1)`
+- Completed the five Week 1 problems.
+- Wrote automated tests.
+- Reached a 7/7 passing FizzBuzz test suite.
+- Learned to read tracebacks.
+- Fixed path/import issues.
+- Learned Python REPL vs PowerShell.
+- Used Git commits and pushed my work.
+- Became more comfortable with time and space complexity.
+- Started thinking about edge cases.
 
-### Key Lesson
+What Was Difficult
 
-The two-pointer technique can solve array problems efficiently by using
-indexes to avoid unnecessary additional data structures.
+- Python indentation
+- `range()` and indexing
+- `%` and `//`
+- Condition ordering
+- Imports and working directories
+- Python environments and pytest
+- Dictionaries in Two Sum
+- Pointers in Merge Sorted Array
+- Dynamic programming in Climbing Stairs
+
+Biggest Lessons
+
+1. Understand the problem before coding.
+2. Work through examples manually.
+3. Identify inputs, outputs, and edge cases.
+4. Design the algorithm before implementation.
+5. Test normal and edge cases.
+6. Read error messages instead of guessing.
+7. Check the environment before changing code.
+8. Think about time and space complexity.
+9. Write readable code.
+10. Use Git to preserve and communicate progress.
+
+Week 2 Goals
+
+- Become faster at recognizing algorithmic patterns.
+- Practice recursion and trees.
+- Practice arrays and nested lists.
+- Improve understanding of hash tables, two pointers, recursion and dynamic programming.
+- Write tests more independently.
+- Reduce avoidable path/import/indentation errors.
+- Continue following PEP 8.
+- Continue making meaningful Git commits.
+- Build toward the Week 2 CLI project.
+
+Final Reflection
+Week 1 taught me that software development is not about getting the correct answer immediately. It is about developing a repeatable process:
+
+**Understand → Plan → Code → Test → Debug → Improve → Document → Commit → Push**
+
+The mistakes I made are part of my learning evidence. I now have a stronger process for investigating problems rather than guessing.
