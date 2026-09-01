@@ -185,6 +185,8 @@ def search(query):
             f"{task.description} | "
             f"{task.priority.capitalize()}"
         )
+
+
 @cli.command()
 @click.option(
     "--confirm",

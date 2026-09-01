@@ -83,7 +83,6 @@ def test_done_task():
 
     assert add_result.exit_code == 0
 
-    # Get the ID assigned by the application.
     task_id = add_result.output.strip().split()[-1]
 
     result = runner.invoke(
@@ -117,7 +116,6 @@ def test_delete_task():
 
     assert add_result.exit_code == 0
 
-    # Get the ID assigned by the application.
     task_id = add_result.output.strip().split()[-1]
 
     result = runner.invoke(
@@ -139,6 +137,8 @@ def test_delete_invalid_task():
 
     assert result.exit_code == 0
     assert "not found" in result.output
+
+
 def test_list_pending_tasks():
     runner = CliRunner()
 
@@ -179,6 +179,8 @@ def test_list_completed_tasks():
 
     assert result.exit_code == 0
     assert "Completed task" in result.output
+
+
 def test_edit_task():
     runner = CliRunner()
 
@@ -253,6 +255,8 @@ def test_edit_invalid_task():
 
     assert result.exit_code == 0
     assert "not found" in result.output
+
+
 def test_search_task():
     runner = CliRunner()
 
